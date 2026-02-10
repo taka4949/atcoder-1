@@ -8,32 +8,27 @@ import java.lang.Math.*
 import kotlin.math.max
 
 fun main() {
-    val s = readLine()!!
-    val n = s.length
-    if (n == 0) {
-        println(0)
-        return
-    }
+    val input1 = readLine()!!.split(" ")
+    val n = input1[0].toInt()
+    val k = input1[1].toInt()
+    val x = input1[2].toLong()
 
-    val v = mutableListOf<Int>()
-    val l = mutableListOf<Int>()
-    var i = 0
-    while (i < n) {
-        var j = i
-        while (j < n && s[j] == s[i]) {
-            j++
-        }
-        v.add(s[i] - '0')
-        l.add(j - i)
-        i = j
-    }
+    val a = readLine()!!.split(" ").map { it.toLong() }.sortedDescending()
 
-    var a: Long = 0
-    for (k in 0 until v.size - 1) {
-        if (v[k] + 1 == v[k + 1]) {
-            val m = if (l[k] < l[k + 1]) l[k] else l[k + 1]
-            a += m.toLong()
+    // 水（ゴミ）になる個数
+    val w = n - k
+
+    var sum = 0L
+
+    // ゴミの次から調べ始める
+    for (i in w until n) {
+        sum += a[i]
+        if (sum >= x) {
+            println(i + 1) // インデックスは0始まりなので+1個
+            return
         }
     }
-    println(a)
+
+    // 最後まで足しても無理なら
+    println("-1")
 }
