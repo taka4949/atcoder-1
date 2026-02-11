@@ -1,5 +1,4 @@
-//TIP コードを<b>実行</b>するには、<shortcut actionId="Run"/> を押すか
-// ガターの <icon src="AllIcons.Actions.Execute"/> アイコンをクリックします。
+
 import kotlin.math.abs
 import kotlin.math.*
 import kotlin.math.min
@@ -8,27 +7,24 @@ import java.lang.Math.*
 import kotlin.math.max
 
 fun main() {
-    val input1 = readLine()!!.split(" ")
-    val n = input1[0].toInt()
-    val k = input1[1].toInt()
-    val x = input1[2].toLong()
+    val (x,y) = readLine()!!.split(" ")
+    val n = x.toInt()
+    val q = y.toInt()
+    val s = readLine()!!
 
-    val a = readLine()!!.split(" ").map { it.toLong() }.sortedDescending()
+    val a = LongArray(n + 1)
 
-    // 水（ゴミ）になる個数
-    val w = n - k
-
-    var sum = 0L
-
-    // ゴミの次から調べ始める
-    for (i in w until n) {
-        sum += a[i]
-        if (sum >= x) {
-            println(i + 1) // インデックスは0始まりなので+1個
-            return
-        }
+    for(i in 0 until n - 1){ // until nだと、if(s[i + 1]でエラー！
+        val v = if(s[i] == s[i + 1] ) 1L else 0L
+        a[i + 1] = a[i] + v
     }
+    a[n] = a[n - 1] // エラー防止！
 
-    // 最後まで足しても無理なら
-    println("-1")
+    for(k in 0 until q){ // q回分回す、ループの使い方！
+        val(l,r) = readLine()!!.split(" ").map { it.toInt() }
+
+        val c = a[r - 1] - a[l - 1] // a[r]はr+1との値のため、含めちゃいけない。[l」はｌ＋１との値のため含めないといけない。
+        // そのため、ｌは前の配列、ｒも前の配列を基準に求める。
+        println(c)
+    }
 }
