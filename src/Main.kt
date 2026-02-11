@@ -7,24 +7,24 @@ import java.lang.Math.*
 import kotlin.math.max
 
 fun main() {
-    val (x,y) = readLine()!!.split(" ")
-    val n = x.toInt()
-    val q = y.toInt()
-    val s = readLine()!!
+    val (ns, ws) = readLine()!!.split(" ")
+    val n = ns.toInt()
+    var w = ws.toLong()
 
-    val a = LongArray(n + 1)
+    val a = mutableListOf<Pair<Long,Long>>() //サイズ自由自在、add可能、中身の書き換え科可能！普通のリストはすべて不変
 
-    for(i in 0 until n - 1){ // until nだと、if(s[i + 1]でエラー！
-        val v = if(s[i] == s[i + 1] ) 1L else 0L
-        a[i + 1] = a[i] + v
+    for(i in 0 until n){
+        val (x,y) = readLine()!!.split(" ").map { it.toLong() }
+        a.add(Pair(x,y))
     }
-    a[n] = a[n - 1] // エラー防止！
+    a.sortByDescending { it.first } //一番おいしいものからえらぶ
 
-    for(k in 0 until q){ // q回分回す、ループの使い方！
-        val(l,r) = readLine()!!.split(" ").map { it.toInt() }
-
-        val c = a[r - 1] - a[l - 1] // a[r]はr+1との値のため、含めちゃいけない。[l」はｌ＋１との値のため含めないといけない。
-        // そのため、ｌは前の配列、ｒも前の配列を基準に求める。
-        println(c)
+    var s = 0L
+    for((m,v) in a){
+        if(w <= 0) break
+        val t = min(w,v)//実質if(w < v) w else v
+        s += t * m
+        w -= t
     }
+    println(s)
 }
