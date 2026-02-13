@@ -1,4 +1,3 @@
-
 import kotlin.math.abs
 import kotlin.math.*
 import kotlin.math.min
@@ -7,16 +6,31 @@ import java.lang.Math.*
 import kotlin.math.max
 
 fun main () {
-   val l = readLine()!!.toLong()
+    val l = readLine()!!.split(" ")
+    val n = l[0].toInt()
+    val k = l[1].toInt()
 
-   val n = l - 1
-   var r = 11L
+    val s = Array(n) { readLine()!! }
 
-   if(r > n - r) r = n - r //対称性 nCrで12C11=12C1同じ。
+    var ans = 0
 
-   var a = 1L
-   for(i in 1.. r){
-      a = a * (n - i + 1) / i //約分する箇所（19C8なら11×10×9×8,,）を計算していない
-   }
-   println(a)
+    for (i in 0 until (1 shl n)) {
+        val cut = IntArray(26)
+        for (j in 0 until n) {
+            if ((i shr j) and 1 == 1) {
+
+                for (c in s[j]) {
+                    cut[c - 'a']++
+                }
+            }
+        }
+        var now = 0
+        for (c in 0 until 26) {
+            if (cut[c] == k) {
+                now++
+            }
+        }
+        ans = max(ans, now)
+    }
+    println(ans)
 }
