@@ -6,25 +6,17 @@ import java.util.ArrayList
 import java.lang.Math.*
 import kotlin.math.max
 
-fun main() {
-    val (ns, ws) = readLine()!!.split(" ")
-    val n = ns.toInt()
-    var w = ws.toLong()
+fun main () {
+   val l = readLine()!!.toLong()
 
-    val a = mutableListOf<Pair<Long,Long>>() //サイズ自由自在、add可能、中身の書き換え科可能！普通のリストはすべて不変
+   val n = l - 1
+   var r = 11L
 
-    for(i in 0 until n){
-        val (x,y) = readLine()!!.split(" ").map { it.toLong() }
-        a.add(Pair(x,y))
-    }
-    a.sortByDescending { it.first } //一番おいしいものからえらぶ
+   if(r > n - r) r = n - r //対称性 nCrで12C11=12C1同じ。
 
-    var s = 0L
-    for((m,v) in a){
-        if(w <= 0) break
-        val t = min(w,v)//実質if(w < v) w else v
-        s += t * m
-        w -= t
-    }
-    println(s)
+   var a = 1L
+   for(i in 1.. r){
+      a = a * (n - i + 1) / i //約分する箇所（19C8なら11×10×9×8,,）を計算していない
+   }
+   println(a)
 }
