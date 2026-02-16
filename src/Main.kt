@@ -6,31 +6,44 @@ import java.lang.Math.*
 import kotlin.math.max
 
 fun main () {
-    val l = readLine()!!.split(" ")
-    val n = l[0].toInt()
-    val k = l[1].toInt()
+    val n = readLine()!!.toInt()
+    val o = Array(n) { readLine()!!.map { it.digitToInt() }.toIntArray() }
 
-    val s = Array(n) { readLine()!! }
+    val a = intArrayOf(1, -1, 0, 0, 1, 1, -1, -1)
+    val b = intArrayOf(0, 0, 1, -1, 1, -1, -1, 1)
 
-    var ans = 0
+    var c = 0
 
-    for (i in 0 until (1 shl n)) {
-        val cut = IntArray(26)
-        for (j in 0 until n) {
-            if ((i shr j) and 1 == 1) {
 
-                for (c in s[j]) {
-                    cut[c - 'a']++
+    for (x in 0 until n) {
+        for (y in 0 until n) {
+            for (z in 0 until 8) {
+                for (w in intArrayOf(1, -1)) {
+                    var count = 1
+                    var x1 = x // 次の値をつくる
+                    var y1 = y
+                    while (true) {
+                        val x2 = x1 + a[z]
+                        val y2 = y1 + b[z]
+                        if (x2 !in 0 until n || y2 !in 0 until n) break //グリッド範囲チェック
+
+                        if (o[x2][y2] == o[x1][y1] + w) {
+                            count++
+                            x1 = x2
+                            y1 = y2
+                            if(count == n){
+                                println(n)
+                                return
+                            }
+                        }else{
+                            break
+                        }
+                    }
+                    if(count > c) c = count //whileあとに最大値一時保存
                 }
             }
         }
-        var now = 0
-        for (c in 0 until 26) {
-            if (cut[c] == k) {
-                now++
-            }
-        }
-        ans = max(ans, now)
     }
-    println(ans)
+    println(c)
 }
+
