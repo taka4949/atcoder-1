@@ -4,46 +4,30 @@ import kotlin.math.min
 import java.util.ArrayList
 import java.lang.Math.*
 import kotlin.math.max
+import java.util.Arrays
 
 fun main () {
-    val n = readLine()!!.toInt()
-    val o = Array(n) { readLine()!!.map { it.digitToInt() }.toIntArray() }
+    val i1 = readLine()!!.split(" ")
+    val n = i1[0].toInt()
+    val q = i1[1].toInt()
 
-    val a = intArrayOf(1, -1, 0, 0, 1, 1, -1, -1)
-    val b = intArrayOf(0, 0, 1, -1, 1, -1, -1, 1)
+    val a = readLine()!!.split(" ").map { it.toInt() }.sorted()
 
-    var c = 0
+    for(i in 0 until q){
+        val x = readLine()!!.toInt()
 
+        var l = 0
+        var r = n
 
-    for (x in 0 until n) {
-        for (y in 0 until n) {
-            for (z in 0 until 8) {
-                for (w in intArrayOf(1, -1)) {
-                    var count = 1
-                    var x1 = x // 次の値をつくる
-                    var y1 = y
-                    while (true) {
-                        val x2 = x1 + a[z]
-                        val y2 = y1 + b[z]
-                        if (x2 !in 0 until n || y2 !in 0 until n) break //グリッド範囲チェック
-
-                        if (o[x2][y2] == o[x1][y1] + w) {
-                            count++
-                            x1 = x2
-                            y1 = y2
-                            if(count == n){
-                                println(n)
-                                return
-                            }
-                        }else{
-                            break
-                        }
-                    }
-                    if(count > c) c = count //whileあとに最大値一時保存
-                }
+        while(l < r){ // 範囲の基礎的な書き方
+            val m = (l + r) / 2
+            if(a[m] < x){
+                l = m + 1
+            }else{ // >=
+                r = m
             }
         }
+        println(n - l) // lは左にある値の数を表している
     }
-    println(c)
 }
 
