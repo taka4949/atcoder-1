@@ -1,6 +1,7 @@
 import kotlin.math.abs
 import kotlin.math.*
 import kotlin.math.min
+import java.util.*
 import java.util.Scanner
 import java.util.ArrayList
 import java.lang.Math.*
@@ -8,27 +9,43 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main () {
-    val n = readLine()!!.toInt()
+    val t = readLine()!!.toInt()
+    repeat(t) {
+        val (n, d) = readLine()!!.split(" ").map { it.toInt() }
+        val a = readLine()!!.split(" ").map { it.toLong() }
+        val b = readLine()!!.split(" ").map { it.toLong() }
 
-    val c = readLine()!!.split(" ").map { it.toLong() }.sorted()
+        val q = mutableListOf<LongArray>()
+        var u = 0
+        var e = 0
 
-    var ans = 1L
-    val mod = 1000000007L
+        for (i in 1..n) {
 
-    for (i in 0 until n) {
-        // c[i] : その人の上限値（本来選べる候補の数）
-        // i    : その人より前にいる人数（すでに使われてしまった数字の個数）3!（3×2×1)のようなもの
-        val count = c[i] - i
-
-        // もし (上限 - 前の人数) が 0以下なら、選べる数字がないということ
-        if (count <= 0) {
-            println(0)
-            return
+            q.add(longArrayOf(i.toLong(), a[i - 1]))
+            var r = b[i - 1]
+            while (r > 0 && u < q.size) {
+                val f = q[u]
+                if (f[1] <= r) {
+                    r -= f[1]
+                    f[1] = 0
+                    u++
+                } else {
+                    f[1] -= r
+                    r = 0
+                }
+            }
+            val l = i - d
+            while (e < q.size && q[e][0] <= l) {
+                q[e][1] = 0
+                e++
+            }
+            if (u < e) u = e
         }
 
-        ans = (ans * count) % mod
+        var s = 0L
+        for (j in 0 until q.size) s += q[j][1]
+        println(s)
     }
 
-    println(ans)
 }
 
