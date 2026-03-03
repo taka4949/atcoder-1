@@ -8,21 +8,18 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main () {
-    val n = readLine()!!.toLong()
-    val r = mutableListOf<Long>()
+ val n = readLine()!!.toInt()
+    val a = readLine()!!.split(" ").map { it.toLong() }.toLongArray()
 
-    var i = 1L
-    while(i * i <= n){ //√nまで調べれば問題ない。約数列挙
-       if(n % i == 0L){
-           r.add(i)
-           if(i * i != n){ //i = 1の場合、６もいれる。ｎ＝16の場合、４を2つ入れないように防いでいる
-               r.add(n / i)
-           }
-       }
-        i++
+    val c = LongArray(200)
+    for(x in a){
+        c[(x % 200).toInt()]++ //あまりのペアを作る。差が倍数＝あまりが同じ。401と201なら余り１、ペア成立。
     }
-    r.sort()
-    println(r.joinToString("\n"))
+    var ans = 0L
+    for(i in c){
+        ans += i * (i - 1) / 2 //2以上＝1ペア以上
+    }
+    println(ans)
 }
 
 
