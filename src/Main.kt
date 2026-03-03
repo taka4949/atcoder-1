@@ -8,33 +8,39 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main() {
-    val inStr = readLine()!!.split(" ")
-    val s = inStr[0]
-    val k = inStr[1].toInt()
+    val s = readLine()!!.split(" ")
+    val h = s[0].toInt()
+    val w = s[1].toInt()
 
-    val set = mutableSetOf<String>()
-    val u = BooleanArray(s.length)
+    val g = Array(h){readLine()!!}
+    val v = Array(h){ BooleanArray(w) }
 
-    fun dfs(c: String) {
-        if (c.length == s.length) {
-            set.add(c)
+    var r = 0
+    var c = 0
+
+    while(true){
+        if(v[r][c]){
+            println("-1")
             return
         }
-        for (i in 0 until s.length) {
-            if (!u[i]) {
-                u[i] = true
-                dfs(c + s[i]) //スタックポインタの巻き戻し。リターン後は、ここはすでに存在しないため、2文字からスタート。
-                u[i] = false //戻り先アドレス。リターン後に実行。ループが最後までいったら、ひとつ前に戻る。
-            }
+        v[r][c] = true
+
+        if(g[r][c] == 'U' && r != 0){
+            r--
+        }else if(g[r][c] == 'D' && r != h - 1){
+            r++
+        }else if (g[r][c] == 'L' && c != 0) {
+            c--
+        } else if (g[r][c] == 'R' && c != w - 1) {
+            c++
+        } else {
+            println("${r + 1} ${c + 1}")
+            return
         }
     }
-
-    dfs("")
-    val l = set.toList().sorted()
-    println(l[k - 1])
 }
 
-
-// 深さ優先探索。例aab→012→021→102→120→201→210。3階層というなら、後ろの階層が最後までおわったら手前に戻り、最後まで進む。
-
+//メインメモリ（RAM）は1本の細長い横線のようなもの。010203,,,10のように横のマスがより近い。
+//L!キャッシュで64バイト分もらう。cpuは処理する人、L1キャッシュは机、メインメモリは倉庫。
+//そのため、二重ループでは、行のデータを内側に記入する
 
