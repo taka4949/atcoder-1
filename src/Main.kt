@@ -8,38 +8,50 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main() {
-    val s = readLine()!!.split(" ")
-    val h = s[0].toInt()
-    val w = s[1].toInt()
+  val s = readLine()!!
+    val t = readLine()!!
 
-    val g = Array(h){readLine()!!}
-    val v = Array(h){ BooleanArray(w) }
+    fun f(x : String) : List<Pair<Char,Int>>{
+        val l = mutableListOf<Pair<Char,Int>>()
+        var c = x[0]
+        var n = 1
 
-    var r = 0
-    var c = 0
+        for(i in 1 until x.length){ //ランレングス圧縮
+            if(x[i] == c){ //L1キャッシュとcpuのレジスタ
+                n++
+            }else{
+                l.add(Pair(c,n))//ヒープへ値が移動→リストにポインタ（住所）書き込まれる
+                c = x[i]
+                n = 1
+            }
+        }
+        l.add(Pair(c,n))
+        return l // 呼び戻し先に返す。リストは2種類作る必要がある。
+    }
 
-    while(true){
-        if(v[r][c]){
-            println("-1")
+    val a = f(s)
+    val b = f(t)
+
+    if(a.size != b.size){ //ペアの数＝文字の種類数をチェックして、違う場合
+        println("No")
+        return
+    }
+    for(i in a.indices){
+        val c1 = a[i].first
+        val n1 = a[i].second
+        val c2 = b[i].first
+        val n2 = b[i].second
+
+        if(c1!=c2){//文字１つ１つをチェックして、違う場合
+            println("No")
             return
         }
-        v[r][c] = true
-
-        if(g[r][c] == 'U' && r != 0){
-            r--
-        }else if(g[r][c] == 'D' && r != h - 1){
-            r++
-        }else if (g[r][c] == 'L' && c != 0) {
-            c--
-        } else if (g[r][c] == 'R' && c != w - 1) {
-            c++
-        } else {
-            println("${r + 1} ${c + 1}")
-            return
+        if(n1!=n2){//文字の個数が違う場合
+            if(n1 < 2 || n1 > n2){ //または、どっちでもNo
+                println("No")
+                return
+            }
         }
     }
+    println("Yes")
 }
-
-//メインメモリ（RAM）は1本の細長い横線のようなもの。010203,,,10のように横のマスがより近い。
-//L!キャッシュで64バイト分もらう。cpuは処理する人、L1キャッシュは机、メインメモリは倉庫。
-//そのため、二重ループでは、行のデータを内側に記入する
