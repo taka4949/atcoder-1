@@ -8,50 +8,37 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main() {
-  val s = readLine()!!
-    val t = readLine()!!
+    val s = readLine()!!.split(" ")
+    val n = s[0].toInt()
+    val k = s[1].toInt()
+    val c = readLine()!!.split(" ").map { it.toInt() }
 
-    fun f(x : String) : List<Pair<Char,Int>>{
-        val l = mutableListOf<Pair<Char,Int>>()
-        var c = x[0]
-        var n = 1
+    val m = HashMap<Int,Int>() //データを入れた順番は保持していない。そのため速い
+    var cut = 0 //種類
+    var ans = 0
 
-        for(i in 1 until x.length){ //ランレングス圧縮
-            if(x[i] == c){ //L1キャッシュとcpuのレジスタ
-                n++
-            }else{
-                l.add(Pair(c,n))//ヒープへ値が移動→リストにポインタ（住所）書き込まれる
-                c = x[i]
-                n = 1
-            }
+    for(i in 0 until k){
+        val v = c[i]
+        if(m.getOrDefault(v,0) == 0){
+            cut++
         }
-        l.add(Pair(c,n))
-        return l // 呼び戻し先に返す。リストは2種類作る必要がある。
+        m[v] = m.getOrDefault(v,0) + 1
     }
+    ans = cut
 
-    val a = f(s)
-    val b = f(t)
+    for(i in k until n){
+        val o = c[i - k]//外れるもの、左端
+        val v = c[i]//加わるもの、右端
 
-    if(a.size != b.size){ //ペアの数＝文字の種類数をチェックして、違う場合
-        println("No")
-        return
-    }
-    for(i in a.indices){
-        val c1 = a[i].first
-        val n1 = a[i].second
-        val c2 = b[i].first
-        val n2 = b[i].second
-
-        if(c1!=c2){//文字１つ１つをチェックして、違う場合
-            println("No")
-            return
+        m[o] = m[o]!! - 1//マップの戻り値はnull許容型のため、‼＝nullではない演算子を書く
+        if(m[o] == 0){
+            cut--
         }
-        if(n1!=n2){//文字の個数が違う場合
-            if(n1 < 2 || n1 > n2){ //または、どっちでもNo
-                println("No")
-                return
-            }
+        if(m.getOrDefault(v,0) == 0){//パイプライン処理→分岐予測器→if分の中では複雑にしない！
+            cut++
         }
+        m[v] = m.getOrDefault(v,0) + 1
+        ans = max(ans,cut)
     }
-    println("Yes")
+    println(ans)
 }
