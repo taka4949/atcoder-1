@@ -9,36 +9,26 @@ import java.util.Arrays
 
 fun main() {
     val s = readLine()!!.split(" ")
-    val n = s[0].toInt()
-    val k = s[1].toInt()
-    val c = readLine()!!.split(" ").map { it.toInt() }
+    val x1 = s[0].toLong()
+    val y1 = s[1].toLong()
+    val x2 = s[2].toLong()
+    val y2 = s[3].toLong()
 
-    val m = HashMap<Int,Int>() //データを入れた順番は保持していない。そのため速い
-    var cut = 0 //種類
-    var ans = 0
+    val dx = longArrayOf(1, 2, 2, 1, -1, -2, -2, -1)
+    val dy = longArrayOf(2, 1, -1, -2, -2, -1, 1, 2)
 
-    for(i in 0 until k){
-        val v = c[i]
-        if(m.getOrDefault(v,0) == 0){
-            cut++
+    var ans = "No"
+
+    for(i in 0 until 8){
+        val nx = x1 + dx[i]//地点１から√5離れた場所へ強制的に移動させる
+        val ny = y1 + dy[i]
+
+        val d2 = (nx - x2) * (nx - x2) + (ny - y2) * (ny - y2)
+//sqrtをつかうと、誤差が生じる。バグの元。FPUは処理が重い。そのため、ルートは外して計算する。
+        if(d2 == 5L){
+            ans = "Yes"
+            break
         }
-        m[v] = m.getOrDefault(v,0) + 1
-    }
-    ans = cut
-
-    for(i in k until n){
-        val o = c[i - k]//外れるもの、左端
-        val v = c[i]//加わるもの、右端
-
-        m[o] = m[o]!! - 1//マップの戻り値はnull許容型のため、‼＝nullではない演算子を書く
-        if(m[o] == 0){
-            cut--
-        }
-        if(m.getOrDefault(v,0) == 0){//パイプライン処理→分岐予測器→if分の中では複雑にしない！
-            cut++
-        }
-        m[v] = m.getOrDefault(v,0) + 1
-        ans = max(ans,cut)
     }
     println(ans)
 }
