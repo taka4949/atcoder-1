@@ -8,43 +8,41 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main() {
- val n = readLine()!!.toInt()
- val x = IntArray(n)
- val y = IntArray(n)
+    val nq = readLine()!!.split(" ")
+    val n = nq[0].toInt()
+    val q = nq[1].toInt()
 
- for(i in 0 until n){
-  val p = readLine()!!.split(" ")
-  x[i] = p[0].toInt()
-  y[i] = p[1].toInt()
- }
+    val a = readLine()!!.split(" ")
 
- val s = readLine()!!
+    val m = mutableMapOf<Int, MutableList<Int>>()//マップは空、作る必要がある。
 
- val r = mutableMapOf<Int,Int>()//必要最低限の情報だけをほしい場合。データが少ない。
- val l = mutableMapOf<Int,Int>()//グループで分けたいときに使用する。
+    for(i in 0 until n){
+        val num = a[i].toInt()
+        val p = i + 1//0番目は1番目にしたい。もし、0番目にした場合、リストには0に0番目が入る。出力時に１ではなく０を出してしまう。
 
- for(i in 0 until n){
-  val x1 = x[i]
-  val y1 = y[i]
-  val d = s[i]
+        if(m.containsKey(num)){
+            m[num]!!.add(p)
+        }else{
+            val l = mutableListOf<Int>() //マップにリストを入れる場合、ここで作る。
+            l.add(p)//リアロケーションしている。
+            m[num] = l//マップにリストを入れる方法
+        }
+    }
+    for(i in 0 until q){
+        val q1 = readLine()!!.split(" ")
+        val x = q1[0].toInt()
+        val y = q1[1].toInt()
 
-  if(d == 'R'){
-   r[y1] = min(r.getOrDefault(y1,Int.MAX_VALUE) ,x1)
-  }else{
-   l[y1] = max(l.getOrDefault(y1,Int.MIN_VALUE),x1)
-  }
- }
+        if(m.containsKey(x)){
+            val x1 = m[x]!!
+            if(y <= x1.size){
+                println(x1[y - 1])//1番目はリストでは0番目なため。
+            }else{
+                println("-1")
+            }
+        }else{
+            println("-1")
+        }
+    }
 
- var ans = "No"
- for(y1 in r.keys){
-  if(l.contains(y1)){
-   val r1 = r[y1]!!//マップの値にはnullではない！！演算子を使用
-   val l1 = l[y1]!!
-   if(r1 < l1){
-    ans = "Yes"
-    break
-   }
-  }
- }
- println(ans)
 }
