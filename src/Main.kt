@@ -8,27 +8,43 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main() {
-    val s = readLine()!!.split(" ")
-    val x1 = s[0].toLong()
-    val y1 = s[1].toLong()
-    val x2 = s[2].toLong()
-    val y2 = s[3].toLong()
+ val n = readLine()!!.toInt()
+ val x = IntArray(n)
+ val y = IntArray(n)
 
-    val dx = longArrayOf(1, 2, 2, 1, -1, -2, -2, -1)
-    val dy = longArrayOf(2, 1, -1, -2, -2, -1, 1, 2)
+ for(i in 0 until n){
+  val p = readLine()!!.split(" ")
+  x[i] = p[0].toInt()
+  y[i] = p[1].toInt()
+ }
 
-    var ans = "No"
+ val s = readLine()!!
 
-    for(i in 0 until 8){
-        val nx = x1 + dx[i]//地点１から√5離れた場所へ強制的に移動させる
-        val ny = y1 + dy[i]
+ val r = mutableMapOf<Int,Int>()//必要最低限の情報だけをほしい場合。データが少ない。
+ val l = mutableMapOf<Int,Int>()//グループで分けたいときに使用する。
 
-        val d2 = (nx - x2) * (nx - x2) + (ny - y2) * (ny - y2)
-//sqrtをつかうと、誤差が生じる。バグの元。FPUは処理が重い。そのため、ルートは外して計算する。
-        if(d2 == 5L){
-            ans = "Yes"
-            break
-        }
-    }
-    println(ans)
+ for(i in 0 until n){
+  val x1 = x[i]
+  val y1 = y[i]
+  val d = s[i]
+
+  if(d == 'R'){
+   r[y1] = min(r.getOrDefault(y1,Int.MAX_VALUE) ,x1)
+  }else{
+   l[y1] = max(l.getOrDefault(y1,Int.MIN_VALUE),x1)
+  }
+ }
+
+ var ans = "No"
+ for(y1 in r.keys){
+  if(l.contains(y1)){
+   val r1 = r[y1]!!//マップの値にはnullではない！！演算子を使用
+   val l1 = l[y1]!!
+   if(r1 < l1){
+    ans = "Yes"
+    break
+   }
+  }
+ }
+ println(ans)
 }
