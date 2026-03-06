@@ -6,31 +6,22 @@ import java.util.Scanner
 import java.util.ArrayList
 import kotlin.math.max
 import java.util.Arrays
+import java.util.ArrayDeque
 
 fun main() {
-    val nw = readLine()!!.split(" ")
-    val n = nw[0].toInt()
-    val w = nw[1].toLong()
+ val n = readLine()!!.toInt()
+    val s = readLine()!!
 
-    val mx = 200005
-    val a = LongArray(mx)
+    val q = ArrayDeque<Int>()//両端に値を入れられる、筒。問題は追加していく際のみ値の隣に置く操作。
+    q.addFirst(n)//逆順。前から入れていくと、割り込みする必要があり、隙間を開ける作業がある。計算量が増加する。
 
-    for(i in 0 until n){
-        val stp = readLine()!!.split(" ")
-        val s = stp[0].toInt()
-        val t = stp[1].toInt()
-        val p = stp[2].toLong()
-
-        a[s] += p
-        a[t] -= p
-    }
-    var cur = 0L
-    for(i in 0 until mx){
-        cur += a[i]
-        if(cur > w){// w=10。10分より超えたら、計画通り供給不可能。
-            println("No")
-            return
+    for(i in n - 1 downTo 0){
+        if(s[i] == 'L'){//逆順のため、１２３０なら、２は１のRだが、３のL。3スタートなため。
+            q.addLast(i)//親から子グループではなく、子グループから親を作っていく。
+        }else{
+            q.addFirst(i)
         }
     }
-    println("Yes")
+    println(q.joinToString(" "))
     }
+//数字がでかいものほど、内側に来る。外から内では割り込みが必須。内から外なら両端に入れるだけで済む！！。
