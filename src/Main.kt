@@ -8,31 +8,29 @@ import kotlin.math.max
 import java.util.Arrays
 
 fun main() {
-  val q = readLine()!!.toInt()
-    val m = TreeMap<Int,Int>() //最小、最大を容易に調べられる。全データ見る必要がない、ノッド型。
+    val nw = readLine()!!.split(" ")
+    val n = nw[0].toInt()
+    val w = nw[1].toLong()
 
-    for(i in 0 until q){
-        val l = readLine()!!.split(" ")
-        val t = l[0].toInt()
+    val mx = 200005
+    val a = LongArray(mx)
 
-        if(t == 1){
-            val x = l[1].toInt()
-            m[x] = m.getOrDefault(x,0) + 1
-        }else if(t == 2) {
-            val x = l[1].toInt()
-            val y = l[2].toInt()
-            if(m.containsKey(x)){
-                val cut = m[x]!!
-                if(cut <= y){//かりに２＜＝１なら、２－１、２＜＝３なら、全削除。
-                    m.remove(x)
-                } else{
-                    m[x] = cut - y
-                }
-            }
-        }else if(t == 3){
-            val ma = m.lastKey()//treemapの特徴
-            val mi = m.firstKey()
-            println(ma - mi)
+    for(i in 0 until n){
+        val stp = readLine()!!.split(" ")
+        val s = stp[0].toInt()
+        val t = stp[1].toInt()
+        val p = stp[2].toLong()
+
+        a[s] += p
+        a[t] -= p
+    }
+    var cur = 0L
+    for(i in 0 until mx){
+        cur += a[i]
+        if(cur > w){// w=10。10分より超えたら、計画通り供給不可能。
+            println("No")
+            return
         }
     }
+    println("Yes")
     }
