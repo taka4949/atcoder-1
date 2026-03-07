@@ -7,34 +7,26 @@ import java.util.ArrayList
 import kotlin.math.max
 import java.util.Arrays
 import java.util.ArrayDeque
+import kotlin.math.max
 
 fun main() {
-  val n = readLine()!!.toInt()
-    val x = LongArray(n)
-    val y = LongArray(n)
+    val n = readLine()!!.toInt()
+    val p = readLine()!!.split(" ").map { it.toInt() }
+
+    val c = IntArray(n)
 
     for(i in 0 until n){
-        val s = readLine()!!.split(" ")
-        x[i] = s[0].toLong()
-        y[i] = s[1].toLong()
+        val x = ((p[i] - 1) - i + n) % n //p[i]=人iとi(料理の現在地）から引いた距離＝円卓の回転数
+        val y = (p[i] - i + n ) % n
+        val z = ((p[i] + 1) - i + n) % n //+nで３から０へ。-3を返さないようにする！。
+
+        c[x]++
+        c[y]++
+        c[z]++
     }
-
-    var ans = 0L
-    for(i in 0 until n - 2){
-        for(j in i + 1 until n - 1){
-            for(k in j + 1 until n){
-                val x1 = x[i] - x[j]
-                val y1 = y[i] - y[j]
-                val x2 = x[i] - x[k]
-                val y2 = y[i] - y[k]
-//傾きとは、変化の割合。ｘとｙの2地点の距離からｘ÷ｙしたもの。距離ではなく割合！。
-                if(x1 * y2 != x2 * y1){//仮に同じ値なら、分母を消しても分子を消しても同じ値になる。
-                    ans++ //↑両方の値に、分母を消すために、両方の分母をかける。
-                }
-
-            }
-        }
+    var ans = 0
+    for(i in 0 until n){
+        ans = max(ans,c[i])//回転数が一番多い→料理全パターンで最も希望者が多い回転してほしい数。
     }
     println(ans)
 }
-//ＰＧは分数不可、割り算だと誤差が生じるため厳密に＝＝したい場合は, 避けるべき。
