@@ -8,59 +8,39 @@ import kotlin.math.max
 import java.util.Arrays
 import java.util.ArrayDeque
 import kotlin.math.max
+import kotlin.system.exitProcess
 
 fun main() {
-    val s = readLine()!!.split(" ")
-    val n = s[0].toInt()
-    val m = s[1].toInt()
+    val n = readLine()!!.toLong()
+    val m = 1000000//p>=2なため、10^18/2=10^6までが最大値
 
-  val a = Array(n){ BooleanArray(n) }
-    val b = Array(n){ BooleanArray(n) }
+    //array<boolean>は,オブジェクトへのポインタ配列で遅い
+    val ip = BooleanArray(m + 1) { true }
+    ip[0] = false
+    ip[1] = false
+    val ps = mutableListOf<Long>()
 
-    for(i in 0 until m){
-        val t = readLine()!!.split(" ")
-        val u = t[0].toInt() -1
-        val v = t[1].toInt() -1
-        a[u][v] = true
-        a[v][u] = true
-    }
-    for (i in 0 until m) {
-        val t = readLine()!!.split(" ")
-        val u = t[0].toInt() - 1
-        val v = t[1].toInt() - 1
-        b[u][v] = true
-        b[v][u] = true
-    }
-
-     var ans = false
-    val p = IntArray(n)
-    val used = BooleanArray(n)
-
-    fun dfs(d:Int){
-        if(d == n) {
-            var ok = true
-            for (i in 0 until n) {
-                for (j in 0 until n) {
-                    if (a[i][j] != b[p[i]][p[j]]) {
-                        ok = false
-                    }
-                }
-            }
-            if (ok)  ans = true
-            return
-        }
-        for(i in 0 until n){
-            if(!used[i]){//大事
-                used[i] = true
-                p[d] = i
-                dfs(d + 1)
-                used [i] = false
+    for (i in 2..m) {
+        if (ip[i]) {
+            ps.add(i.toLong())
+            for (j in i * 2..m step i) {//倍数＝素数ではない。4,6,8,,,など
+                ip[j] = false//ステップの1回目は、そのまま４
             }
         }
     }
-    dfs(0)
-    println(if(ans) "Yes" else "No")
+    var c = 0L
+    for (q in ps) {//qからのほうがはやい
+        val q3 = q * q * q
+        if (q3 > n) break
+
+        for (p in ps) {
+            if (p >= q) break
+            if(p * q3 <= n){
+                c++
+            }else{
+                break
+            }
+        }
+    }
+    println(c)
 }
-//dfs１から３まで行く場合は最後までループするが、３から2へ戻る際などは最初に進んでいたループの途中からスタートする。
-//a基準に考える。インデックスの位置が対応関係。紐の本数は変化だめ。
-//nの大きさが小さい場合、対応関係を探す場合、深さ優先探索
