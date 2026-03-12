@@ -10,37 +10,62 @@ import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.system.exitProcess
 
+
+import kotlin.system.exitProcess
+
 fun main() {
-    val n = readLine()!!.toLong()
-    val m = 1000000//p>=2なため、10^18/2=10^6までが最大値
+    val (n, m) = readLine()!!.split(" ").map { it.toInt() }
+    val a = Array(n) { BooleanArray(n) }
+    val b = Array(n) { BooleanArray(n) }
 
-    //array<boolean>は,オブジェクトへのポインタ配列で遅い
-    val ip = BooleanArray(m + 1) { true }
-    ip[0] = false
-    ip[1] = false
-    val ps = mutableListOf<Long>()
+    for (i in 0 until m) {
+        val (x, y) = readLine()!!.split(" ").map { it.toInt() - 1 }
+        a[x][y] = true
+        a[y][x] = true
+    }
 
-    for (i in 2..m) {
-        if (ip[i]) {
-            ps.add(i.toLong())
-            for (j in i * 2..m step i) {//倍数＝素数ではない。4,6,8,,,など
-                ip[j] = false//ステップの1回目は、そのまま４
+    for (i in 0 until m) {
+        val (x, y) = readLine()!!.split(" ").map { it.toInt() - 1 }
+        b[x][y] = true
+        b[y][x] = true
+    }
+
+    val u = BooleanArray(n)
+    val p = mutableListOf<Int>()
+
+    fun f() {
+        if (p.size == n) {
+            var o = true
+            for (i in 0 until n) {
+                // 重複してペアを調べないために i + 1 から n まで回す
+                for (j in i + 1 until n) {
+                    if (a[i][j] != b[p[i]][p[j]]) {
+                        o = false
+                    }
+                }
+            }
+            // 一致したら Yes を出してプログラム自体を即終了
+            if (o) {
+                println("Yes")
+                exitProcess(0)
+            }
+            return
+        }
+
+        for (i in 0 until n) {
+            if (!u[i]) {
+                u[i] = true
+                p.add(i)
+                f() // 次の数字を探しに行く
+                p.removeLast() // 戻ってきたら追加した数字を消して元に戻す
+                u[i] = false
             }
         }
     }
-    var c = 0L
-    for (q in ps) {//qからのほうがはやい
-        val q3 = q * q * q
-        if (q3 > n) break
 
-        for (p in ps) {
-            if (p >= q) break
-            if(p * q3 <= n){
-                c++
-            }else{
-                break
-            }
-        }
-    }
-    println(c)
+    f() // ここで最初の探索をスタートさせる
+
+    // 全部のパターンを試して exitProcess(0) が呼ばれなかったら No
+    println("No")
 }
+
