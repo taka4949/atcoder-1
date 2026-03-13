@@ -10,62 +10,32 @@ import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.system.exitProcess
 
+fun main(){
+    val n = readLine()!!.toInt()
+    var ans = 0L
 
-import kotlin.system.exitProcess
-
-fun main() {
-    val (n, m) = readLine()!!.split(" ").map { it.toInt() }
-    val a = Array(n) { BooleanArray(n) }
-    val b = Array(n) { BooleanArray(n) }
-
-    for (i in 0 until m) {
-        val (x, y) = readLine()!!.split(" ").map { it.toInt() - 1 }
-        a[x][y] = true
-        a[y][x] = true
-    }
-
-    for (i in 0 until m) {
-        val (x, y) = readLine()!!.split(" ").map { it.toInt() - 1 }
-        b[x][y] = true
-        b[y][x] = true
-    }
-
-    val u = BooleanArray(n)
-    val p = mutableListOf<Int>()
-
-    fun f() {
-        if (p.size == n) {
-            var o = true
-            for (i in 0 until n) {
-                // 重複してペアを調べないために i + 1 から n まで回す
-                for (j in i + 1 until n) {
-                    if (a[i][j] != b[p[i]][p[j]]) {
-                        o = false
-                    }
-                }
+    fun f(v: Int): Long {
+        var c = 0L
+        var i = 1
+        while (i * i <= v) {
+            if (v % i == 0) {
+                c++
             }
-            // 一致したら Yes を出してプログラム自体を即終了
-            if (o) {
-                println("Yes")
-                exitProcess(0)
-            }
-            return
+            i++
         }
+        return c
+    }
 
-        for (i in 0 until n) {
-            if (!u[i]) {
-                u[i] = true
-                p.add(i)
-                f() // 次の数字を探しに行く
-                p.removeLast() // 戻ってきたら追加した数字を消して元に戻す
-                u[i] = false
-            }
+    for (x in 1..(n / 2)) {
+        val y = n - x
+
+        if (x != y) {
+            ans += f(x) * f(y)
+        } else {
+            val c = f(x)
+            ans += c * (c + 1) / 2
         }
     }
 
-    f() // ここで最初の探索をスタートさせる
-
-    // 全部のパターンを試して exitProcess(0) が呼ばれなかったら No
-    println("No")
+    println(ans)
 }
-
