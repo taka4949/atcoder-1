@@ -10,32 +10,14 @@ import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.system.exitProcess
 
-fun main(){
-    val n = readLine()!!.toInt()
-    var ans = 0L
-
-    fun f(v: Int): Long {
-        var c = 0L
-        var i = 1
-        while (i * i <= v) {
-            if (v % i == 0) {
-                c++
-            }
-            i++
-        }
-        return c
-    }
-
-    for (x in 1..(n / 2)) {
-        val y = n - x
-
-        if (x != y) {
-            ans += f(x) * f(y)
-        } else {
-            val c = f(x)
-            ans += c * (c + 1) / 2
-        }
-    }
-
+fun main() {
+    val  (l,r) = readLine()!!.split(" ").map { it.toLong() }
+    val g = gcd(l,r)//12，24なら12が最大公約数＋重複していないのは２→24答え
+    val ans = (l * r ) / g//最小公倍数とは、両方の共通する数字を１つずつかけ合わせた数字。
     println(ans)
+
+}
+
+fun gcd (x : Long,y : Long) : Long{
+    return if(y == 0L) x else gcd(y,x % y)
 }
