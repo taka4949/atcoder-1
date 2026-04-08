@@ -12,32 +12,31 @@ import kotlin.system.exitProcess
 
 
 fun main() {
-val (n,m) = readLine()!!.split(" ").map { it.toInt() }
- val g = Array(n){ArrayList<Int>()}//サイズ指定がない分、メモリ効率がいい
+ val n = readLine()!!.toInt()
+    val s = readLine()!!
 
-    for(i in 0 until m){
-        val(u,v) = readLine()!!.split(" ").map { it.toInt() - 1 }
-      g[u].add(v)
-        g[v].add(u)
+    val r = mutableListOf<Pair<Char,Int>>()
+    var i = 0
+    while (i < n){
+        var j = i
+        while (j < n && s[i] == s[j]){
+            j++
+        }
+        r.add(Pair(s[i],j - i))
+        i = j
     }
 
-    val vis = BooleanArray(n)
+    val m = IntArray(26)
+    for(j in r){
+        val c = j.first - 'a'
+        val l = j.second
+        if(l > m[c]){
+            m[c] = l
+        }
+    }
     var ans = 0
-
-    fun dfs(c:Int){
-        vis[c] = true//ここで記録する
-        for(j in g[c]){
-            if(!vis[j]){
-                dfs(j)
-            }
-        }
-    }
-
-    for(i in 0 until n){//ここから、関数dfsへ移動
-        if(!vis[i]){
-            ans++//ここでは、連結部分の始まりをカウント、連結全て記録後に次へ。
-            dfs(i)
-        }
+    for(x in m){
+        ans += x
     }
     println(ans)
 }
