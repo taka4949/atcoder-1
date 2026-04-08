@@ -10,28 +10,44 @@ import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.system.exitProcess
 
+
 fun main() {
-    val (n,l,r) = readLine()!!.split(" ").map { it.toInt() }
-    val s = readLine()!!
+val(n,m,k) = readLine()!!.split(" ").map { it.toInt() }
+    val a = Array(m){IntArray(0)}
+    val r = CharArray(m)
 
-    val a = Array(26) { mutableListOf<Int>() }
-    for (i in 0 until n) {
-        a[s[i] - 'a'].add(i + 1)//s内a等のインデックス番号をリストへ
-    }
-    var count = 0L
-    for (i in 0 until 26) {
-        val v = a[i]
-
-        for (j in 0 until v.size) {//vの配列内=list内はmaxでn^5*5
-            val x = v[j]
-            val m = x + l
-            val mm = x + r
-            var p = v.binarySearch(m)//a[1,3,5]で3なら、１返したい。
-            if (p < 0) p = -(p) - 1
-            var pp = v.binarySearch(mm + 1)//区間の個数出す際+1必須。6はない、3返したい。
-            if (pp < 0) pp = -(pp) - 1
-            count += (pp - p).toLong()//3－1で0から2～4離れた場所に2個ある
+    for(i in 0 until m){
+        val s = readLine()!!.split(" ")
+        val c = s[0].toInt()
+        val t = IntArray(c)
+        for(j in 0 until c){
+            t[j] = s[j + 1].toInt() - 1
         }
+        a[i] = t
+        r[i] = s.last()[0]
     }
-    println(count)
+    var ans = 0
+
+    for(b in 0 until (1 shl n)){
+        var ok = true
+        for(i in 0 until m){
+            var c2 = 0
+            for(x in a[i]){
+                if(((b shr x) and 1) == 1){
+                    c2++
+                }
+            }
+            val op = c2>= k
+            val ex = r[i] == 'o'
+
+            if(op != ex){
+                ok = false
+                break
+            }
+        }
+        if(ok) ans++
+    }
+    println(ans)
+
 }
+
