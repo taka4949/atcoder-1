@@ -12,42 +12,33 @@ import kotlin.system.exitProcess
 
 
 fun main() {
-val(n,m,k) = readLine()!!.split(" ").map { it.toInt() }
-    val a = Array(m){IntArray(0)}
-    val r = CharArray(m)
+val (n,m) = readLine()!!.split(" ").map { it.toInt() }
+ val g = Array(n){ArrayList<Int>()}//サイズ指定がない分、メモリ効率がいい
 
     for(i in 0 until m){
-        val s = readLine()!!.split(" ")
-        val c = s[0].toInt()
-        val t = IntArray(c)
-        for(j in 0 until c){
-            t[j] = s[j + 1].toInt() - 1
-        }
-        a[i] = t
-        r[i] = s.last()[0]
+        val(u,v) = readLine()!!.split(" ").map { it.toInt() - 1 }
+      g[u].add(v)
+        g[v].add(u)
     }
+
+    val vis = BooleanArray(n)
     var ans = 0
 
-    for(b in 0 until (1 shl n)){
-        var ok = true
-        for(i in 0 until m){
-            var c2 = 0
-            for(x in a[i]){
-                if(((b shr x) and 1) == 1){
-                    c2++
-                }
-            }
-            val op = c2>= k
-            val ex = r[i] == 'o'
-
-            if(op != ex){
-                ok = false
-                break
+    fun dfs(c:Int){
+        vis[c] = true//ここで記録する
+        for(j in g[c]){
+            if(!vis[j]){
+                dfs(j)
             }
         }
-        if(ok) ans++
+    }
+
+    for(i in 0 until n){//ここから、関数dfsへ移動
+        if(!vis[i]){
+            ans++//ここでは、連結部分の始まりをカウント、連結全て記録後に次へ。
+            dfs(i)
+        }
     }
     println(ans)
-
 }
 
