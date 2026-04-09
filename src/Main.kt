@@ -12,35 +12,27 @@ import kotlin.system.exitProcess
 
 
 fun main() {
- val n = readLine()!!.toInt()
-  val e = mutableMapOf<Int,Int>()
+val (h,w) = readLine()!!.split(" ").map { it.toInt() }
+    val a = Array(h){readLine()!!.split(" ").map { it.toInt() }}
+    var r = 0
 
-  for(i in 0 until n){
-      val s = readLine()!!.split(" ")
-      val a = s[0].toInt()
-      val b = s[1].toInt()
+    fun f(x : Int,y : Int ,s : MutableSet<Int>){
+        if(a[x][y] in s) return
 
-      e[a] = e.getOrDefault(a,0) + 1
-      e[a + b] = e.getOrDefault(a + b,0) - 1//いもす法
-  }
-    val ans = IntArray(n + 1)
-    var cur = 0
+        s.add(a[x][y])
 
-    val k = e.keys.sorted()//日数ソート1,2,3,4,5など
+        if(x == h - 1 && y == w - 1) {
+            r++
 
-    var pre = k[0]
-
-    for(x in k){
-        val d = x - pre
-        ans[cur] += d//人数1人の時は何日間あったのか集計
-        cur += e[x]!!//ここから、スタート。1日目～2日目1人
-        pre = x
+        }else {
+            if (x < h - 1) f(x + 1, y, s)
+            if (y < w - 1) f(x, y + 1, s)
+        }
+        s.remove(a[x][y])
     }
+    val c = mutableSetOf<Int>()
+    f(0,0,c)
 
-    val out = StringBuilder()
-    for(i in 1..n){
-        out.append(ans[i]).append(if(i==n) "" else " ")//1人の時ｘ日、2人の時ｘ日など出力
+    println(r)
     }
-    println(out.toString())
-}
 
