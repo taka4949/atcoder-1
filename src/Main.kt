@@ -10,29 +10,40 @@ import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.system.exitProcess
 
-
 fun main() {
-val (h,w) = readLine()!!.split(" ").map { it.toInt() }
-    val a = Array(h){readLine()!!.split(" ").map { it.toInt() }}
-    var r = 0
+ val (n, m) = readLine()!!.split(" ").map { it.toInt() }
+ val s = Array(n) { readLine()!! }
 
-    fun f(x : Int,y : Int ,s : MutableSet<Int>){
-        if(a[x][y] in s) return
+ var ans = false
+ val u = BooleanArray(n)
+ val p = IntArray(n)
 
-        s.add(a[x][y])
-
-        if(x == h - 1 && y == w - 1) {
-            r++
-
-        }else {
-            if (x < h - 1) f(x + 1, y, s)
-            if (y < w - 1) f(x, y + 1, s)
-        }
-        s.remove(a[x][y])
+ fun dfs(d: Int) {
+  if (d == n) {
+   var ok = true
+   for (i in 0 until n - 1) {
+    var c = 0
+    for (j in 0 until m) {
+     if (s[p[i]][j] != s[p[i + 1]][j]) c++
     }
-    val c = mutableSetOf<Int>()
-    f(0,0,c)
+    if (c != 1) ok = false
+   }
+   if (ok) ans = true
+   return
+  }
 
-    println(r)
-    }
+
+ for (i in 0 until n) {
+  if (!u[i]) {
+   u[i] = true
+   p[d] = i
+   dfs(d + 1)
+   u[i] = false
+  }
+ }
+}
+dfs(0)
+        println(if(ans) "Yes" else "No")
+}
+
 
