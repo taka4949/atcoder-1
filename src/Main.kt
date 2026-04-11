@@ -11,39 +11,37 @@ import kotlin.math.max
 import kotlin.system.exitProcess
 
 fun main() {
- val (n, m) = readLine()!!.split(" ").map { it.toInt() }
- val s = Array(n) { readLine()!! }
+ val s = readLine()!!
+    val t = readLine()!!
 
- var ans = false
- val u = BooleanArray(n)
- val p = IntArray(n)
+    val a = s.filter { it != 'A'}
+    val b = t.filter { it != 'A'}
 
- fun dfs(d: Int) {
-  if (d == n) {
-   var ok = true
-   for (i in 0 until n - 1) {
-    var c = 0
-    for (j in 0 until m) {
-     if (s[p[i]][j] != s[p[i + 1]][j]) c++
+    if(a != b){
+        println("-1")
+        return
     }
-    if (c != 1) ok = false
-   }
-   if (ok) ans = true
-   return
-  }
 
-
- for (i in 0 until n) {
-  if (!u[i]) {
-   u[i] = true
-   p[d] = i
-   dfs(d + 1)
-   u[i] = false
-  }
- }
+    fun f(x:String): List<Long>{
+        val l = mutableListOf<Long>()
+        var c = 0L
+        for(i in x){
+            if(i == 'A'){
+                c++
+            }else{
+                l.add(c)
+                c = 0L
+            }
+        }
+        l.add(c)
+        return l
+    }
+    val x = f(s)
+    val y = f(t)
+    var r = 0L
+    for(i in x.indices){
+        r += abs(x[i]  - y[i])
+    }
+    println(r)
 }
-dfs(0)
-        println(if(ans) "Yes" else "No")
-}
-
 
