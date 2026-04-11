@@ -11,37 +11,24 @@ import kotlin.math.max
 import kotlin.system.exitProcess
 
 fun main() {
- val s = readLine()!!
-    val t = readLine()!!
+   val(n,k) = readLine()!!.split(" ").map { it.toInt() }
+    val s = readLine()!!
 
-    val a = s.filter { it != 'A'}
-    val b = t.filter { it != 'A'}
+    val m = mutableMapOf<String,Int>()
 
-    if(a != b){
-        println("-1")
-        return
+    for(i in 0 .. s.length - k ){
+        val w = s.substring(i,i + k)
+        m[w] = m.getOrDefault(w,0) + 1
+    }
+    val x = m.values.maxOrNull() ?:0
+    val r = mutableListOf<String>()
+
+    for((p,v) in m){
+        if(v == x) r.add(p)
     }
 
-    fun f(x:String): List<Long>{
-        val l = mutableListOf<Long>()
-        var c = 0L
-        for(i in x){
-            if(i == 'A'){
-                c++
-            }else{
-                l.add(c)
-                c = 0L
-            }
-        }
-        l.add(c)
-        return l
-    }
-    val x = f(s)
-    val y = f(t)
-    var r = 0L
-    for(i in x.indices){
-        r += abs(x[i]  - y[i])
-    }
-    println(r)
+    r.sort()
+    println(x)
+    println(r.joinToString(" "))
 }
 
