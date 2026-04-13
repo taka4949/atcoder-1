@@ -11,24 +11,53 @@ import kotlin.math.max
 import kotlin.system.exitProcess
 
 fun main() {
-   val(n,k) = readLine()!!.split(" ").map { it.toInt() }
-    val s = readLine()!!
 
-    val m = mutableMapOf<String,Int>()
+    val(h,w) = readLine()!!.split(" ").map { it.toInt() }
+    val a = Array(h){readLine()!!}
 
-    for(i in 0 .. s.length - k ){
-        val w = s.substring(i,i + k)
-        m[w] = m.getOrDefault(w,0) + 1
+    val b = intArrayOf(-1,-1,+1,+1)
+    val b2 = intArrayOf(-1,+1,+1,-1)
+
+    val n = min(h,w)
+    val r = IntArray(n + 1)
+
+    for(i in 0 until h){
+        for(j in 0 until w){
+            if(a[i][j] == '#' && i != 0 && j != 0 && i < h - 1 && j < w - 1){
+                var x = true
+                for(l in 0 until b.size){
+                    val ii = i + b[l]
+                    val jj = j + b2[l]
+                    if(a[ii][jj] != '#'){
+                        x = false
+                        break
+                    }
+                }
+                var k = 0
+                if(x){
+                    k = 1
+                    while(true){
+                        val d = k + 1
+                        var f = true
+                        for(m in 0 until b.size){
+                            val ii = i + b[m] * d
+                            val jj = j + b2[m] * d
+                            if (ii >= 0 && ii < h && jj >= 0 && jj < w && a[ii][jj] == '#') {
+                                    //こっちのifは、壁ぎりぎりまでOK
+                            }else{
+                                f = false
+                                break
+                            }
+                        }
+                        if(f) k++ else break
+
+                    }
+                    r[k]++
+
+
+                }
+            }
+        }
     }
-    val x = m.values.maxOrNull() ?:0
-    val r = mutableListOf<String>()
-
-    for((p,v) in m){
-        if(v == x) r.add(p)
-    }
-
-    r.sort()
-    println(x)
-    println(r.joinToString(" "))
+    println((1..n).map{r[it]}.joinToString(" "))
 }
-
