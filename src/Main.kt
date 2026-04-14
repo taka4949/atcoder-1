@@ -11,53 +11,18 @@ import kotlin.math.max
 import kotlin.system.exitProcess
 
 fun main() {
+    val n = readLine()!!.toInt()
+    val s = readLine()!!.split(" ").map { it.toLong() }
+    val t = readLine()!!.split(" ").map { it.toLong() }.toMutableList()
 
-    val(h,w) = readLine()!!.split(" ").map { it.toInt() }
-    val a = Array(h){readLine()!!}
+    for(i in 0 until 2 * n){//初めて＝最速の時間を求める→3番目スタートの場合を考慮
+        val a = i % n //円環
+        val b = (i + 1) % n
 
-    val b = intArrayOf(-1,-1,+1,+1)
-    val b2 = intArrayOf(-1,+1,+1,-1)
-
-    val n = min(h,w)
-    val r = IntArray(n + 1)
-
-    for(i in 0 until h){
-        for(j in 0 until w){
-            if(a[i][j] == '#' && i != 0 && j != 0 && i < h - 1 && j < w - 1){
-                var x = true
-                for(l in 0 until b.size){
-                    val ii = i + b[l]
-                    val jj = j + b2[l]
-                    if(a[ii][jj] != '#'){
-                        x = false
-                        break
-                    }
-                }
-                var k = 0
-                if(x){
-                    k = 1
-                    while(true){
-                        val d = k + 1
-                        var f = true
-                        for(m in 0 until b.size){
-                            val ii = i + b[m] * d
-                            val jj = j + b2[m] * d
-                            if (ii >= 0 && ii < h && jj >= 0 && jj < w && a[ii][jj] == '#') {
-                                    //こっちのifは、壁ぎりぎりまでOK
-                            }else{
-                                f = false
-                                break
-                            }
-                        }
-                        if(f) k++ else break
-
-                    }
-                    r[k]++
-
-
-                }
-            }
-        }
+        t[b] = min(t[b],t[a] + s[a])
     }
-    println((1..n).map{r[it]}.joinToString(" "))
+
+    for(i in 0 until n){
+        println(t[i])
+    }
 }
