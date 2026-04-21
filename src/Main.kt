@@ -10,19 +10,37 @@ import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.system.exitProcess
 
-fun main() {
-    val n = readLine()!!.toInt()
-    val s = readLine()!!.split(" ").map { it.toLong() }
-    val t = readLine()!!.split(" ").map { it.toLong() }.toMutableList()
 
-    for(i in 0 until 2 * n){//初めて＝最速の時間を求める→3番目スタートの場合を考慮
-        val a = i % n //円環
-        val b = (i + 1) % n
+    fun main() {
+        val (n,m) = readLine()!!.split(" ").map { it.toInt() }
 
-        t[b] = min(t[b],t[a] + s[a])
-    }
+        val g = Array(n + 1){mutableListOf<Int>()}
+        repeat(m){
+            val(a,b) = readLine()!!.split(" ").map { it.toInt() }
+            g[a].add(b)
+        }
+        val v = BooleanArray(n + 1)
+        val stack = ArrayDeque<Int>()
+        var count = 0
 
-    for(i in 0 until n){
-        println(t[i])
-    }
-}
+        stack.push(1)
+        v[1] = true
+        count++
+
+        while(stack.isNotEmpty()){
+            val u = stack.pop()
+
+            for(next in g[u]){
+                if(!v[next]){
+                    v[next] = true
+                    count++
+                    stack.push(next)
+                }
+            }
+        }
+        println(count)
+
+        }
+
+
+
