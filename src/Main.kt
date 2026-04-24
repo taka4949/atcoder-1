@@ -19,38 +19,39 @@
 
   fun main() {
     val o = PrintWriter(System.`out`)
+      val (h,w,n) = readLine()!!.split(" ").map { it.toInt() }
 
+      val t = readLine()!!
+      val s = Array(h){readLine()!!}
 
-      val (n,q) = readLine()!!.split(" ").map { it.toInt() }
-      val aa = mutableListOf<Pair<Int,Int>>()
+      var c = 0
 
-      var x = 1
-      var y = 0
-      for(i in n downTo 1){ //リストに逆順に入れる。
-          aa.add(i to 0)
-      }
-      repeat(q) {
-          val s = readLine()!!.split(" ")
-          val a = s[0].toInt()
-          if (a == 1) {
-              val d = s[1]
-              if (d == "U") {
-                  y++
-              } else if (d == "D") {
-                  y--
-              } else if (d == "L") {
-                  x--
-              } else if (d == "R") {
-                  x++
+      for(i in 0 until h){
+          for(j in 0 until w){
+              var z = true//リセット場所ここ！。間違えやすい
+              if(s[i][j] == '.'){
+                  var x = i
+                  var y = j
+                  for(k in 0 until t.length) {
+                      when (t[k]) {
+                          'L' -> y--
+                          'R' -> y++
+                          'U' -> x--
+                          'D' -> x++
+                      }
+                      if (s[x][y] != '.') {
+                          z = false
+                          break
+                      }
+                  }
+                  if(z) c++//条件分岐内に書かないとだめ。間違いやすい
+                  }
               }
-              aa.add(x to y)
 
-          } else {
-              val p = s[1].toInt()
-              val z = aa[aa.size - p]//リストは後ろから追加したほうが早い
-              println("${z.first} ${z.second}")
           }
-      }
+
+o.println(c)
+
 
     o.flush()
     o.close()
