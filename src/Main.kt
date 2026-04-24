@@ -20,26 +20,36 @@
   fun main() {
     val o = PrintWriter(System.`out`)
 
-val v = readLine()!!.split(" ")
 
-    val x = v[0].toLong()
-    val a = v[1].toLong()
-    val d = v[2].toLong()
-    val n = v[3].toLong()
+      val (n,q) = readLine()!!.split(" ").map { it.toInt() }
+      val aa = mutableListOf<Pair<Int,Int>>()
 
-    val m = (n-1L) * d + a
-    val s = min(a,m)
-      val t = max(a,m)
+      var x = 1
+      var y = 0
+      for(i in n downTo 1){ //リストに逆順に入れる。
+          aa.add(i to 0)
+      }
+      repeat(q) {
+          val s = readLine()!!.split(" ")
+          val a = s[0].toInt()
+          if (a == 1) {
+              val d = s[1]
+              if (d == "U") {
+                  y++
+              } else if (d == "D") {
+                  y--
+              } else if (d == "L") {
+                  x--
+              } else if (d == "R") {
+                  x++
+              }
+              aa.add(x to y)
 
-      if(d == 0L){
-          o.println(abs(x-a))
-      }else if(x <= s){
-          o.println(s - x)
-      } else if(x >= t){
-          o.println(x - t)
-      }else{
-          val r = abs(x - a) % abs(d)
-          o.println(min(r,abs(d) - r))
+          } else {
+              val p = s[1].toInt()
+              val z = aa[aa.size - p]//リストは後ろから追加したほうが早い
+              println("${z.first} ${z.second}")
+          }
       }
 
     o.flush()
