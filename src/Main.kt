@@ -19,40 +19,28 @@
 
   fun main() {
     val o = PrintWriter(System.`out`)
-      val (h,w,n) = readLine()!!.split(" ").map { it.toInt() }
 
-      val t = readLine()!!
-      val s = Array(h){readLine()!!}
+   val (n,q) = readLine()!!.split(" ").map { it.toInt() }
 
-      var c = 0
+    val a = readLine()!!.split(" ").map { it.toInt() }
+    val c = BooleanArray(n + 2)
+    var count = 0
 
-      for(i in 0 until h){
-          for(j in 0 until w){
-              var z = true//リセット場所ここ！。間違えやすい
-              if(s[i][j] == '.'){
-                  var x = i
-                  var y = j
-                  for(k in 0 until t.length) {
-                      when (t[k]) {
-                          'L' -> y--
-                          'R' -> y++
-                          'U' -> x--
-                          'D' -> x++
-                      }
-                      if (s[x][y] != '.') {
-                          z = false
-                          break
-                      }
-                  }
-                  if(z) c++//条件分岐内に書かないとだめ。間違いやすい
-                  }
-              }
-
-          }
-
-o.println(c)
-
+    for(i in 0 until q){
+    val x = a[i]
+      if(!c[x]){
+        c[x] = true
+        if(!c[x-1]) count++//スコープ重要。独立した条件なら絶対に独立したものにする
+        if(c[x+1]) count--
+      }else{
+        c[x] = false
+        if(!c[x-1])count--
+        if(c[x+1])count++
+      }
+      o.println(count)
+    }
 
     o.flush()
     o.close()
   }
+
