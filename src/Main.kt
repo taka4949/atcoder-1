@@ -16,29 +16,37 @@
 
   import java.io.PrintWriter
 
+  fun g(a : Long,b:Long): Long {
+    return if(b == 0L) a else g(b,a%b)
+  }
 
   fun main() {
     val o = PrintWriter(System.`out`)
 
-   val (n,q) = readLine()!!.split(" ").map { it.toInt() }
+    val i = readLine()!!
+    val s = i.split(" ")
+    val n = s[0].toLong()
+    val m = s[1].toLong()
+    val k = s[2].toLong()
 
-    val a = readLine()!!.split(" ").map { it.toInt() }
-    val c = BooleanArray(n + 2)
-    var count = 0
+    val l = (n / g(n,m)) * m//オーバーフロー防ぐ
 
-    for(i in 0 until q){
-    val x = a[i]
-      if(!c[x]){
-        c[x] = true
-        if(!c[x-1]) count++//スコープ重要。独立した条件なら絶対に独立したものにする
-        if(c[x+1]) count--
-      }else{
-        c[x] = false
-        if(!c[x-1])count--
-        if(c[x+1])count++
+    var w = 0L
+    var e = 2000000000000000000L
+
+    while (e - w > 1) {//めぐる二分探索。常に、そのままmidを代入すればいい。
+      val r = w + (e - w) / 2//w=2w/2に変換、分母そろえる
+      val c = (r / n) + (r / m) - 2 * (r / l)
+
+      if (c >= k) {
+        e = r
+      } else {
+        w = r
       }
-      o.println(count)
     }
+
+    o.println(e)
+
 
     o.flush()
     o.close()
