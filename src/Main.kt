@@ -16,39 +16,47 @@
 
   import java.io.PrintWriter
 
-  fun g(a : Long,b:Long): Long {
-    return if(b == 0L) a else g(b,a%b)
-  }
 
   fun main() {
     val o = PrintWriter(System.`out`)
+    val s = readLine()!!.split(" ").map { it.toInt() }
+    val n = s[0]
+    val q = s[1]
 
-    val i = readLine()!!
-    val s = i.split(" ")
-    val n = s[0].toLong()
-    val m = s[1].toLong()
-    val k = s[2].toLong()
+    val a = readLine()!!.split(" ").map { it.toInt() }.toIntArray()
+    a.sort()
 
-    val l = (n / g(n,m)) * m//オーバーフロー防ぐ
+    val b = StringBuilder()
+    repeat(q) {
+      val x = readLine()!!.toInt()
 
-    var w = 0L
-    var e = 2000000000000000000L
+      // めぐる式二分探索
+      var l = -1 // ng (x未満が確定しているインデックス)
+      var r = n  // ok (x以上である可能性があるインデックス)
 
-    while (e - w > 1) {//めぐる二分探索。常に、そのままmidを代入すればいい。
-      val r = w + (e - w) / 2//w=2w/2に変換、分母そろえる
-      val c = (r / n) + (r / m) - 2 * (r / l)
-
-      if (c >= k) {
-        e = r
-      } else {
-        w = r
+      while (r - l > 1) {
+        val m = l + (r - l) / 2
+        if (a[m] >= x) {
+          r = m
+        } else {
+          l = m
+        }
       }
+
+      // r は x 以上の最小のインデックス
+      // 全体の人数 n から r を引けば、x 以上の人数が出る
+      b.append("${n - r}\n")
     }
-
-    o.println(e)
-
+   o.print(b)
 
     o.flush()
     o.close()
   }
 
+
+
+
+
+  fun g(a : Long,b:Long): Long {
+    return if(b == 0L) a else g(b,a%b)
+  }
