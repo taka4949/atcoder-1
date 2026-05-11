@@ -19,39 +19,45 @@
 
   fun main() {
     val o = PrintWriter(System.`out`)
-    val s = readLine()!!.split(" ").map { it.toInt() }
-    val n = s[0]
-    val q = s[1]
 
-    val a = readLine()!!.split(" ").map { it.toInt() }.toIntArray()
-    a.sort()
+    val n = readLine()!!.toInt()
+    val l = LongArray(n)
+    val r = LongArray(n)
 
-    val b = StringBuilder()
-    repeat(q) {
-      val x = readLine()!!.toInt()
+    var s =0L
+    var m = 0L
 
-      // めぐる式二分探索
-      var l = -1 // ng (x未満が確定しているインデックス)
-      var r = n  // ok (x以上である可能性があるインデックス)
-
-      while (r - l > 1) {
-        val m = l + (r - l) / 2
-        if (a[m] >= x) {
-          r = m
-        } else {
-          l = m
-        }
-      }
-
-      // r は x 以上の最小のインデックス
-      // 全体の人数 n から r を引けば、x 以上の人数が出る
-      b.append("${n - r}\n")
+    for(i in 0 until n){
+      val a = readLine()!!.split(" ").map { it.toLong() }
+      l[i] = a[0]
+      r[i] = a[1]
+      s += l[i]
+      m += r[i]
     }
-   o.print(b)
 
-    o.flush()
-    o.close()
-  }
+    if (0 < s || 0 > m) {
+      println("No")
+      return
+    }
+
+    println("Yes")
+    val x = LongArray(n)
+    var d = -s
+
+    for (i in 0 until n) {
+      val v = min(d, r[i] - l[i])
+      x[i] = l[i] + v
+      d -= v
+    }
+
+    o.println(x.joinToString(" "))
+
+      o.flush()
+      o.close()
+    }
+
+
+
 
 
 
