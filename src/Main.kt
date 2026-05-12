@@ -13,6 +13,7 @@
   import java.util.StringTokenizer
   import java.io.BufferedReader
   import java.io.InputStreamReader
+  import java.math.BigInteger
 
   import java.io.PrintWriter
 
@@ -20,37 +21,23 @@
   fun main() {
     val o = PrintWriter(System.`out`)
 
-    val n = readLine()!!.toInt()
-    val l = LongArray(n)
-    val r = LongArray(n)
+    val n = readLine()!!.toLong()
+    val k = readLine()!!.toInt()
+    val a = readLine()!!.split(" ").map { it.toLong() }
 
-    var s =0L
-    var m = 0L
+    var y = 1L
+    for(i in 1..k) y*= 10
+    y -= 1
 
-    for(i in 0 until n){
-      val a = readLine()!!.split(" ").map { it.toLong() }
-      l[i] = a[0]
-      r[i] = a[1]
-      s += l[i]
-      m += r[i]
+    var x = 1L
+    for(v in a){
+      if(x > y/v){//x*a>yと同じ。オバフロ対策
+        x = 1L
+      }else{
+        x *= v
+      }
     }
-
-    if (0 < s || 0 > m) {
-      println("No")
-      return
-    }
-
-    println("Yes")
-    val x = LongArray(n)
-    var d = -s
-
-    for (i in 0 until n) {
-      val v = min(d, r[i] - l[i])
-      x[i] = l[i] + v
-      d -= v
-    }
-
-    o.println(x.joinToString(" "))
+    o.println(x)
 
       o.flush()
       o.close()
