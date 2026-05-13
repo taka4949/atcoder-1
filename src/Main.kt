@@ -21,27 +21,47 @@
   fun main() {
     val o = PrintWriter(System.`out`)
 
-    val n = readLine()!!.toLong()
-    val k = readLine()!!.toInt()
-    val a = readLine()!!.split(" ").map { it.toLong() }
+    val t = readLine()!!.toInt()
 
-    var y = 1L
-    for(i in 1..k) y*= 10
-    y -= 1
+    repeat(t) {
+      val n = readLine()!!.toInt()
+      val s = readLine()!!.split(" ").map { it.toLong() }
 
-    var x = 1L
-    for(v in a){
-      if(x > y/v){//x*a>yと同じ。オバフロ対策
-        x = 1L
-      }else{
-        x *= v
+      val b = s[0]
+      val e = s[n - 1]
+      if (b * 2 >= e) {
+        println(2)
+      } else {
+        val m = mutableListOf<Long>()
+        for (i in 1 until n - 1) {
+          m.add(s[i])
+        }
+        m.sort()
+
+        var v = b
+        var c = 2
+        var j = 0
+        var f = true
+
+        while (v * 2 < e) {
+          var x = -1L
+          while (j < m.size && m[j] <= v * 2) {
+            x = m[j]
+            j++
+          }
+          if (x == -1L) {
+            f = false
+            break
+          }
+          v = x
+          c++
+        }
+        if (f) println(c) else println(-1)
       }
     }
-    o.println(x)
-
-      o.flush()
+      o.flush()//repeat使うときは、必ずこれらをループの外に書く。
       o.close()
-    }
+  }
 
 
 
