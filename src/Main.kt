@@ -14,53 +14,31 @@
   import java.io.BufferedReader
   import java.io.InputStreamReader
   import java.math.BigInteger
-
   import java.io.PrintWriter
 
+  val m = mutableMapOf<Long, Long>()
+
+  fun f(n: Long): Long {
+
+    if (n < 2) return 0L
+
+    // すでに計算した数字なら、その結果を返す。重要！！！メモ
+    val k = m[n]
+    if (k != null) return k
+
+    // ⌊x/2⌋ は n / 2
+    // ⌈x/2⌉ は (n + 1) / 2。ここは切り上げを計算するため
+    val r = n + f(n / 2) + f((n + 1) / 2)
+
+    // 結果を記録して返す
+    m[n] = r
+    return r
+  }
 
   fun main() {
-    val o = PrintWriter(System.`out`)
-
-    val t = readLine()!!.toInt()
-
-    repeat(t) {
-      val n = readLine()!!.toInt()
-      val s = readLine()!!.split(" ").map { it.toLong() }
-
-      val b = s[0]
-      val e = s[n - 1]
-      if (b * 2 >= e) {
-        println(2)
-      } else {
-        val m = mutableListOf<Long>()
-        for (i in 1 until n - 1) {
-          m.add(s[i])
-        }
-        m.sort()
-
-        var v = b
-        var c = 2
-        var j = 0
-        var f = true
-
-        while (v * 2 < e) {
-          var x = -1L
-          while (j < m.size && m[j] <= v * 2) {
-            x = m[j]
-            j++
-          }
-          if (x == -1L) {
-            f = false
-            break
-          }
-          v = x
-          c++
-        }
-        if (f) println(c) else println(-1)
-      }
-    }
-      o.flush()//repeat使うときは、必ずこれらをループの外に書く。
-      o.close()
+    val s = readLine()!!
+    val n = s.toLong()
+    println(f(n))
   }
 
 
@@ -70,6 +48,8 @@
 
 
 
-  fun g(a : Long,b:Long): Long {
-    return if(b == 0L) a else g(b,a%b)
-  }
+
+
+
+
+
