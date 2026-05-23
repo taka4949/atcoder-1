@@ -17,29 +17,44 @@ import java.math.BigInteger
 import java.util.HashMap
 import java.io.PrintWriter
 
-
 fun main() {
-  val n = readLine()!!.toInt()
-  val a = readLine()!!.split(" ").map { it.toInt() }.toIntArray()
-  var v = 0L
-  for (i in 0 until n) {
-    var l = -1//二分探索スタート位置は参照されない！（だから配列外）
-    var r = n//同様
-    while (r - l > 1) {//めぐる式テンプレ
-      val m = (l + r) / 2//Longなら、ｍ＝l+(r-l)/2
-      if (a[m] >= a[i] * 2) {//最大の最小値ならこの形（m＞＝）になる。重要
-        r = m
-      } else {
-        l = m
-      }
+
+    val(n,q) = readLine()!!.split(" ").map { it.toInt() }
+
+    val a = IntArray(n + 1)
+    val b = IntArray(600066)
+    val c = IntArray(600066)
+
+    b[0] = n
+    c[0] = n
+
+    var o = 0
+    val s = StringBuilder()
+
+    for (k in 0 until q) {
+        val(t,x) = readLine()!!.split(" ").map { it.toInt() }
+
+
+
+
+        if (t == 1) {
+            val p = a[x]
+            val v = p + 1
+
+            b[p]--
+            b[v]++
+            c[v]++
+            a[x]++
+
+            if (b[o] == 0) {
+                o++
+            }
+        } else {
+            s.append(c[x + o]).append("\n")
+        }
     }
-    v += (n - r)
-  }
-  println(v)
+    print(s)
 }
-
-
-
 
 
 
