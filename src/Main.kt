@@ -16,44 +16,38 @@ import java.io.InputStreamReader
 import java.math.BigInteger
 import java.util.HashMap
 import java.io.PrintWriter
+import kotlin.Comparator
 
 fun main() {
 
-    val(n,q) = readLine()!!.split(" ").map { it.toInt() }
 
-    val a = IntArray(n + 1)
-    val b = IntArray(600066)
-    val c = IntArray(600066)
+    val v = readLine()!!.split(" ").map { it.toInt() }
+    val c = charArrayOf('A', 'B', 'C', 'D', 'E')
+    val l = mutableListOf<Pair<String, Int>>()
 
-    b[0] = n
-    c[0] = n
-
-    var o = 0
-    val s = StringBuilder()
-
-    for (k in 0 until q) {
-        val(t,x) = readLine()!!.split(" ").map { it.toInt() }
-
-
-
-
-        if (t == 1) {
-            val p = a[x]
-            val v = p + 1
-
-            b[p]--
-            b[v]++
-            c[v]++
-            a[x]++
-
-            if (b[o] == 0) {
-                o++
+    for(i in 1..31){
+        var s = ""
+        var p = 0
+        for(j in 0 ..4){
+            if(((i shr j) and 1) !=  0){
+                s += c[j]
+                p += v[j]
             }
-        } else {
-            s.append(c[x + o]).append("\n")
         }
+        l.add(Pair(s,p))
     }
-    print(s)
+
+    l.sortWith(Comparator { x, y ->//xとy比較して、プラスなら入れ替える。以外なら何もしない。
+        if (x.second != y.second) {
+            y.second.compareTo(x.second)
+        } else {
+            x.first.compareTo(y.first)
+        }
+    })
+
+for(i in l){
+    println(i.first)
+}
 }
 
 
