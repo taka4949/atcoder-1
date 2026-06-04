@@ -21,28 +21,46 @@ import kotlin.Comparator
 import kotlin.math.pow
 
 fun main() {
-    val s = readLine()!!.split(" ")
-    val n = s[0].toInt()
-    val q = s[1].toInt()
-    var l = 0
-    var r = 1
-    var y = 0
-    for (i in 0 until q) {
-        val g = readLine()!!.split(" ")
-        val h = g[0]
-        val t = g[1].toInt() - 1
-        val a = if (h == "L") l else r
-        val c = if (h == "L") r else l
-        val d = (t - a + n) % n
-        val m = (c - a + n) % n
-        if (m < d) {
-            y += n - d
-        } else {
-            y += d
-        }
-        if (h == "L") l = t else r = t
+
+
+    val l = readLine()!!.split(" ").map { it.toInt() }
+    val n = l[0]
+    val m = l[1]
+
+    val g = Array(n + 1) { mutableListOf<Int>() }
+    for (i in 0 until m) {
+        val e = readLine()!!.split(" ").map { it.toInt() }
+        val u = e[0]
+        val v = e[1]
+        g[u].add(v)
+        g[v].add(u)
     }
-    println(y)
+
+    val v = BooleanArray(n + 1)
+    var k = 0
+
+    for (i in 1..n) {
+        if (!v[i]) {
+            k++
+            val s = ArrayDeque<Int>()
+            s.push(i)
+            v[i] = true
+
+            while (!s.isEmpty()) {
+                val c = s.pop()
+                for (nxt in g[c]) {
+                    if (!v[nxt]) {
+                        v[nxt] = true
+                        s.push(nxt)
+                    }
+                }
+            }
+        }
+    }
+
+    val a = m - (n - k)
+    println(a)
+
 }
 
 
