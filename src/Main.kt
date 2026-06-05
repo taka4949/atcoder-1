@@ -21,45 +21,44 @@ import kotlin.Comparator
 import kotlin.math.pow
 
 fun main() {
+    val q = readLine()!!.toInt()
+    val d = IntArray(q + 1)
+    val m = IntArray(q + 1)
 
+    var l = 0
+    d[0] = 0
+    m[0] = 0
 
-    val l = readLine()!!.split(" ").map { it.toInt() }
-    val n = l[0]
-    val m = l[1]
+    val s = StringBuilder()
 
-    val g = Array(n + 1) { mutableListOf<Int>() }
-    for (i in 0 until m) {
-        val e = readLine()!!.split(" ").map { it.toInt() }
-        val u = e[0]
-        val v = e[1]
-        g[u].add(v)
-        g[v].add(u)
-    }
-
-    val v = BooleanArray(n + 1)
-    var k = 0
-
-    for (i in 1..n) {
-        if (!v[i]) {
-            k++
-            val s = ArrayDeque<Int>()
-            s.push(i)
-            v[i] = true
-
-            while (!s.isEmpty()) {
-                val c = s.pop()
-                for (nxt in g[c]) {
-                    if (!v[nxt]) {
-                        v[nxt] = true
-                        s.push(nxt)
-                    }
-                }
+    for (i in 0 until q) {
+        val t = readLine()!!
+        if (t[0] == '1') {
+            val c = t[2]
+            l++
+            if (c == '(') {
+                d[l] = d[l - 1] + 1
+            } else {
+                d[l] = d[l - 1] - 1
             }
+
+            if (d[l] < 0) {
+                m[l] = m[l - 1] + 1
+            } else {
+                m[l] = m[l - 1]
+            }
+        } else {
+            l--
+        }
+
+        if (d[l] == 0 && m[l] == 0) {
+            s.append("Yes\n")
+        } else {
+            s.append("No\n")
         }
     }
+    print(s)
 
-    val a = m - (n - k)
-    println(a)
 
 }
 
