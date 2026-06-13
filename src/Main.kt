@@ -20,50 +20,36 @@ import kotlin.math.sqrt
 import kotlin.Comparator
 import kotlin.math.pow
 
+
 fun main() {
-    val q = readLine()!!.toInt()
-    val d = IntArray(q + 1)
-    val m = IntArray(q + 1)
 
-    var l = 0
-    d[0] = 0
-    m[0] = 0
+    val n = readLine()!!.toInt()
+    val d = IntArray(n + 1) { 0 }
 
-    val s = StringBuilder()
+    for (i in 1..n) {
 
-    for (i in 0 until q) {
-        val t = readLine()!!
-        if (t[0] == '1') {
-            val c = t[2]
-            l++
-            if (c == '(') {
-                d[l] = d[l - 1] + 1
-            } else {
-                d[l] = d[l - 1] - 1
-            }
+        val s = readLine()!!.split(" ").map { it.toInt() }
+        val x = s[0]
+        val y = s[1]
+        d[x] = y
+    }
 
-            if (d[l] < 0) {
-                m[l] = m[l - 1] + 1
-            } else {
-                m[l] = m[l - 1]
-            }
+    var c = 0
+    var m = 1000000000
+
+    for (i in 1..n) {
+        if (d[i] > m) {
+
         } else {
-            l--
+            c++
         }
-
-        if (d[l] == 0 && m[l] == 0) {
-            s.append("Yes\n")
-        } else {
-            s.append("No\n")
+        if (d[i] < m) {
+            m = d[i]
         }
     }
-    print(s)
 
-
+    println(c)
 }
-
-
-
 
 
 
