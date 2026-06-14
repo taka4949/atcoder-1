@@ -21,34 +21,40 @@ import kotlin.Comparator
 import kotlin.math.pow
 
 
+import java.util.StringTokenizer
+
 fun main() {
+    val l = readLine()!!
+    val s = l.split(" ")
+    val n = s[0].toInt()
+    val q = s[1].toInt()
 
-    val n = readLine()!!.toInt()
-    val d = IntArray(n + 1) { 0 }
+    val c = IntArray(n + 1) { 1 }
+    var m = 1
 
-    for (i in 1..n) {
+    val o = StringBuilder()
 
-        val s = readLine()!!.split(" ").map { it.toInt() }
-        val x = s[0]
-        val y = s[1]
-        d[x] = y
-    }
+    for (i in 0 until q) {
+        val r = readLine()!!
+        val t = r.split(" ")
+        val x = t[0].toInt()
+        val y = t[1].toInt()
 
-    var c = 0
-    var m = 1000000000
-
-    for (i in 1..n) {
-        if (d[i] > m) {
-
+        if (x < m) {
+            o.append(0).append("\n")
         } else {
-            c++
-        }
-        if (d[i] < m) {
-            m = d[i]
+            var a = 0
+            for (j in m..x) {
+                a += c[j]
+                c[j] = 0
+            }
+            c[y] += a
+            m = x + 1
+            o.append(a).append("\n")
         }
     }
 
-    println(c)
+    print(o)
 }
 
 
