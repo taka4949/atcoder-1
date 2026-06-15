@@ -20,43 +20,33 @@ import kotlin.math.sqrt
 import kotlin.Comparator
 import kotlin.math.pow
 
-
-import java.util.StringTokenizer
-
 fun main() {
-    val l = readLine()!!
-    val s = l.split(" ")
-    val n = s[0].toInt()
-    val q = s[1].toInt()
+    val h = readLine()!!
+    val n = h.split(" ")[0].toInt()
+    val m = h.split(" ")[1].toInt()
 
-    val c = IntArray(n + 1) { 1 }
-    var m = 1
+    val a = IntArray(n + 2)
 
-    val o = StringBuilder()
+    for (i in 0 until m) {
+        val g = readLine()!!
+        val l = g.split(" ")[0].toInt()
+        val r = g.split(" ")[1].toInt()
+        a[l]++
+        a[r + 1]--
+    }
 
-    for (i in 0 until q) {
-        val r = readLine()!!
-        val t = r.split(" ")
-        val x = t[0].toInt()
-        val y = t[1].toInt()
+    var v = 0
+    var w = Int.MAX_VALUE
 
-        if (x < m) {
-            o.append(0).append("\n")
-        } else {
-            var a = 0
-            for (j in m..x) {
-                a += c[j]
-                c[j] = 0
-            }
-            c[y] += a
-            m = x + 1
-            o.append(a).append("\n")
+    for (i in 1..n) {
+        v += a[i]
+        if (v < w) {
+            w = v
         }
     }
 
-    print(o)
+    println(w)
 }
-
 
 
 
