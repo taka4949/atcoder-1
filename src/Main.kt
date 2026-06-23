@@ -21,32 +21,42 @@ import kotlin.Comparator
 import kotlin.math.pow
 
 fun main() {
-    val h = readLine()!!
-    val n = h.split(" ")[0].toInt()
-    val m = h.split(" ")[1].toInt()
+    val a = readLine()!!.split(" ").map { it.toInt() }
+    val n = a[0]
+    val r = a[1]
+    val l = readLine()!!.split(" ").map { it.toInt() }
 
-    val a = IntArray(n + 2)
+    var z = 0
+    var x = -1
+    var y = -1
 
-    for (i in 0 until m) {
-        val g = readLine()!!
-        val l = g.split(" ")[0].toInt()
-        val r = g.split(" ")[1].toInt()
-        a[l]++
-        a[r + 1]--
-    }
-
-    var v = 0
-    var w = Int.MAX_VALUE
-
-    for (i in 1..n) {
-        v += a[i]
-        if (v < w) {
-            w = v
+    for (i in 0 until n) {
+        if (l[i] == 0) {
+            z++
+            if (x == -1) {
+                x = i
+            }
+            y = i
         }
     }
 
-    println(w)
-}
+    if (z == 0) {
+        println(0)
+        return
+    }
+
+    var p = if (r < x + 1) r else x + 1
+    var q = if (r > y) r else y
+
+    var c = 0
+    for (i in p until q) {
+        if (l[i] == 1) {
+            c++
+        }
+    }
+
+    println(z + c * 2)
+    }
 
 
 
